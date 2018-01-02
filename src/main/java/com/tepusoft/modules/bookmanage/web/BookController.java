@@ -93,4 +93,10 @@ public class BookController extends BaseController{
             throw e;
         }
     }
+
+
+
+    public void test(){
+
+    }
 }
