@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.timing.dao.TimingDao">
+    
+	<sql id="timingColumns">
+		a.id AS "id",
+		a.is_effect AS "isEffect",
+		a.cron AS "cron",
+		a.status AS "status",
+		a.content AS "content",
+		a.work_id AS "workId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.create_name AS "createName",
+		a.update_date AS "updateDate",
+		a.update_name AS "updateName",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="timingJoins">
+	</sql>
+    
+	<select id="get" resultType="Timing">
+		SELECT 
+			<include refid="timingColumns"/>
+		FROM timing a
+		<include refid="timingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Timing">
+		SELECT 
+			<include refid="timingColumns"/>
+		FROM timing a
+		<include refid="timingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Timing">
+		SELECT 
+			<include refid="timingColumns"/>
+		FROM timing a
+		<include refid="timingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO timing(
+			id,
+			is_effect,
+			cron,
+			status,
+			content,
+			work_id,
+			create_by,
+			create_date,
+			update_by,
+			create_name,
+			update_date,
+			update_name,
+			del_flag
+		) VALUES (
+			#{id},
+			#{isEffect},
+			#{cron},
+			#{status},
+			#{content},
+			#{workId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{createBy.name},
+			#{updateDate},
+			#{updateBy.name},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE timing SET 	
+			is_effect = #{isEffect},
+			cron = #{cron},
+			status = #{status},
+			content = #{content},
+			work_id = #{workId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			update_name = #{updateBy.name}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE timing SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

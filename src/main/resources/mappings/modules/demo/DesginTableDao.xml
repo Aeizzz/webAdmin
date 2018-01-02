@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.demo.dao.DesginTableDao">
+
+
+    <sql id="All">
+        a.*
+    </sql>
+    <sql id="fromTable">
+      sys_desgin_table a
+    </sql>
+
+    <select id="findList" resultType="DesginTable" >
+        SELECT
+        <include refid="All"/>
+        FROM
+        <include refid="fromTable"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="tableName!= null ">
+                AND  a.table_name = #{tableName}
+                <!--<if test="dbName == 'mysql'">CONCAT('%', #{tableName}, '%')</if>-->
+            </if>
+        </where>
+    </select>
+
+    <insert id="createTable"  >
+        create table ${tableName}
+        (
+        id  VARCHAR(32) NOT NULL PRIMARY KEY comment '主键',
+        <foreach collection="fieldList" item="list">
+
+            ${list.fieldName}   ${list.type}
+            <if test="list.type=='varchar'or list.type=='int'"> (${list.length}) </if>
+            comment #{list.content},
+        </foreach>
+        create_by          VARCHAR(50) comment '创建人',
+        create_date       dateTime comment '创建时间',
+        update_by       VARCHAR(50) comment '更新人',
+        create_name       VARCHAR(50) comment '创建人名称',
+        update_date        datetime  comment '更新时间',
+        update_name       VARCHAR(50) comment '更新人名称'
+        )
+
+
+    </insert>
+    <select id="get" resultType="DesginTable">
+        SELECT
+        <include refid="All"/>
+        FROM
+        <include refid="fromTable"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findTableList" resultType="DesginTable">
+        <if test="dbName == 'mysql'">
+            SELECT t.table_name AS name,t.TABLE_COMMENT AS comments
+            FROM information_schema.`TABLES` t
+            WHERE t.TABLE_SCHEMA = (select database())
+            <if test="tableName != null and tableName != ''">
+                AND t.TABLE_NAME = (#{name})
+            </if>
+            ORDER BY t.TABLE_NAME
+        </if>
+    </select>
+    <insert id="insert">
+        INSERT INTO sys_desgin_table(
+        id,
+        is_dbsynch,
+        table_name,
+        form_category,
+        form_version,
+        is_checkbox,
+        querymode,
+        remarks,
+        create_By,
+        create_Date,
+        update_By,
+        update_Date,
+        update_name,
+        create_name,
+        del_flag
+        ) VALUES (
+        #{id},
+        #{isDbsynch},
+        #{tableName},
+        #{formCategory},
+        #{formVersion},
+        #{isCheckbox},
+        #{querymode},
+        #{remarks},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate},
+        #{updateBy.name},
+        #{createBy.name},
+       #{delFlag}
+        )
+    </insert>
+    <update id="update">
+        UPDATE sys_desgin_table SET
+       table_name  = #{tableName},
+        querymode =  #{querymode},
+        remarks = #{remarks},
+        form_category=  #{formCategory},
+        form_version= #{formVersion},
+        querymode = #{querymode},
+        update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		update_name = #{updateBy.name},
+	   is_dbsynch=#{isDbsynch}
+        WHERE id = #{id}
+    </update>
+    <!--<update id="updateIsDbsynch">-->
+    <!--UPDATE sys_desgin_table SET-->
+    <!--is_dbsynch=#{isDbsynch}-->
+    <!--WHERE id = #{id}-->
+    <!--</update>-->
+
+    <update id="delete">
+        UPDATE sys_desgin_table SET
+           del_flag = #{DEL_FLAG_DELETE}
+          WHERE id = #{id}
+    </update>
+
+    <update id="dropTable">
+
+           drop table ${tableName}
+     </update>
+    <update id="dropReTable">
+         DROP TABLE IF EXISTS re${tableName}
+    </update>
+    <select  id="reTable">
+        CREATE TABLE  re${tableName}
+        SELECT * FROM  ${tableName}
+    </select>
+</mapper>

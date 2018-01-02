@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.demo.dao.DesginFieldDao">
+
+    <select id="findList" resultType="DesginField" >
+        SELECT
+        a.*
+        FROM
+        sys_desgin_field a
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="tableId!=null">
+             AND   a.table_id =#{tableId}
+            </if>
+        </where>
+    </select>
+<select id="get" resultType="DesginField">
+
+    select
+    a.*
+    FROM
+    sys_desgin_field a
+    WHERE
+    id=#{Id}
+
+</select>
+    <!--<select id="get" resultType="DesginTable">-->
+        <!--SELECT-->
+        <!--a.*,b.*-->
+        <!--FROM-->
+        <!--sys_desgin_field a ,sys_desgin_table b-->
+        <!--WHERE-->
+        <!--a.table_id=b.tableName-->
+        <!--and  a.del_flag = #{DEL_FLAG_NORMAL}-->
+        <!--<if test="tableId!=null">-->
+            <!--and  a.table_id =#{tableId}-->
+        <!--</if>-->
+    <!--</select>-->
+    <insert id="insert">
+        INSERT INTO sys_desgin_field(
+        id,
+        table_Id,
+        content,
+        field_name,
+        length,
+        type,
+        show_type,
+       del_flag
+        ) VALUES (
+        #{id},
+        #{tableId},
+        #{content},
+        #{fieldName},
+        #{length},
+        #{type},
+        #{showType},
+       #{delFlag}
+        )
+    </insert>
+    <update id="update">
+        UPDATE sys_desgin_field SET
+        content=  #{content},
+        field_name = #{fieldName},
+       length =  #{length},
+        type= #{type},
+        show_type=#{showType}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        UPDATE sys_desgin_field SET
+        del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+</mapper>

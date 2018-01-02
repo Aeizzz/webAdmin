@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.fileManage.dao.SysFileDao">
+    
+	<sql id="sysFileColumns">
+		a.id AS "id",
+		a.parent_id AS "parentId",
+		a.parent_ids AS "parentIds",
+		a.file_name AS "name",
+		a.file_path AS "filePath",
+		a.past_date AS "pastDate",
+		a.file_size AS "fileSize",
+		a.version ,
+		a.click_num AS "clickNum",
+		a.download_num AS "downloadNum",
+		a.create_by AS "createBy.id",
+		a.create_name AS "createName",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_name AS "updateName",
+		a.update_date AS "updateDate",
+		a.type,
+		a.file_type AS  "fileType",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="sysFileJoins">
+	</sql>
+    
+	<select id="get" resultType="SysFile">
+		SELECT 
+			<include refid="sysFileColumns"/>
+		FROM sys_file a
+		<include refid="sysFileJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysFile">
+		SELECT 
+			<include refid="sysFileColumns"/>
+		FROM sys_file a
+		<include refid="sysFileJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND  a.parent_Id=#{parentId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysFile">
+		SELECT 
+			<include refid="sysFileColumns"/>
+		FROM sys_file a
+		<include refid="sysFileJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findByParentIdsLike" resultType="SysFile">
+		SELECT
+		a.id,
+		a.parent_id AS "parent.id",
+		a.parent_ids
+		FROM sys_file a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds}
+
+	</select>
+	<insert id="insert">
+		INSERT INTO sys_file(
+			id,
+			parent_id,
+			parent_ids,
+			file_name,
+			file_path,
+			past_date,
+			file_size,
+			version,
+			click_num,
+			download_num,
+			create_by,
+			create_name,
+			create_date,
+			update_by,
+			update_name,
+			update_date,
+			file_type,
+			type,
+			del_flag
+		) VALUES (
+			#{id},
+			#{parentId},
+			#{parentIds},
+			#{name},
+			#{filePath},
+			#{pastDate},
+			#{fileSize},
+			#{version},
+			#{clickNum},
+			#{downloadNum},
+			#{createBy.id},
+			#{createBy.name},
+			#{createDate},
+			#{updateBy.id},
+			#{updateBy.name},
+			#{updateDate},
+			#{fileType},
+			#{type},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_file SET 	
+			parent_id = #{parentId},
+			parent_ids = #{parentIds},
+			file_name = #{name},
+			file_path = #{filePath},
+			past_date = #{pastDate},
+			file_size = #{fileSize},
+			version = #{version},
+			click_num = #{clickNum},
+			download_num = #{downloadNum},
+			update_by = #{updateBy.id},
+			update_name = #{updateBy.name},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_file SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

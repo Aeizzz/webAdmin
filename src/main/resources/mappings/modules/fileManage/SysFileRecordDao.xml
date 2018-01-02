@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.fileManage.dao.SysFileRecordDao">
+
+    <insert id="insert">
+		INSERT INTO sys_file_record(
+			id,
+			remarks,
+			create_by,
+			create_name,
+			create_date,
+			folder_id,
+			operation,
+			file_type
+		) VALUES (
+			#{id},
+			#{remarks},
+			#{createBy.id},
+			#{updateBy.name},
+			#{createDate},
+			#{folderId},
+			#{operation},
+			#{fileType}
+		)
+	</insert>
+
+    <!--<update id="update">-->
+		<!--UPDATE sys_file_record SET 	-->
+			<!--remarks = #{remarks},-->
+			<!--create_name = #{createName},-->
+			<!--folder_id = #{folderId},-->
+			<!--operation = #{operation},-->
+			<!--file_type = #{fileType}-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+
+    <!--<update id="delete">-->
+		<!--DELETE FROM sys_file_record-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+
+</mapper>

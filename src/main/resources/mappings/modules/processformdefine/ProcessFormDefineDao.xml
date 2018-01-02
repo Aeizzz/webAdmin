@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.processformdefine.dao.ProcessFormDefineDao">
+
+	
+	<!-- 查询已创建订单 -->
+	<sql id="columns">
+		a.id,
+		a.table_name,
+		a.column_name,
+		a.page_column_name,
+		a.chinese_name,
+		a.column_type
+	</sql>
+	
+	<select id="getColumnsByTableName" resultType="TableColumnEntity">
+		SELECT 
+			<include refid="columns"/>
+		FROM TABLE_COLUMN a
+		<where>
+			a.table_name=#{tableName}
+		</where>
+		order by id asc
+	</select>
+	
+	<select id="findListByTableName" parameterType="java.lang.String" resultType="java.util.Map" statementType="STATEMENT">
+		select * from ${tableName}
+	</select>
+	
+	<!-- 新增数据 -->
+	<insert id="saveInfo" >
+		INSERT INTO ${tableName} (
+			<foreach collection="list" item="item" index="index" separator="," >
+				${item.columnName}
+			</foreach>
+		) VALUES
+		(
+			<foreach collection="list" item="item" index="index" separator="," >
+				#{item.columnValue}
+			</foreach>
+		)
+	</insert>
+	
+	<update id="updateInfo" >
+		update ${tableName} 
+		<set>
+			<foreach collection="list" item="item" index="index" separator="," >
+				${item.columnName}=#{item.columnValue}
+			</foreach>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	
+	
+	<select id="getInfo" parameterType="java.lang.String" resultType="java.util.Map" >
+		select * from ${tableName}
+		<where>
+			id=#{id}
+		</where>
+	</select>
+	
+	
+	<delete id="deleteInfo" parameterType="java.lang.String">
+		DELETE FROM ${tableName} WHERE id = #{id}
+	</delete>
+	
+	
+</mapper>

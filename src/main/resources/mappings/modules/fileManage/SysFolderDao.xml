@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.fileManage.dao.SysFolderDao">
+    
+	<sql id="sysFolderColumns">
+		a.id AS "id",
+		a.folder_name AS "name" ,
+		a.parent_ids  ,
+		a.parent_id  AS "parent.id",
+		a.create_by  AS "createBy.id",
+		a.create_date  ,
+		a.create_name As  "createName",
+		a.update_by  AS  "updateBy.id",
+		a.update_date ,
+		a.update_name ,
+		a.del_flag ,
+		a.type,
+		a.file_size AS "fileSize",
+		a.click_num AS "clickNum",
+		a.download_num  AS "downloadNum",
+		a.remarks
+	</sql>
+	
+	<sql id="sysFolderJoins">
+	</sql>
+    
+	<select id="get" resultType="SysFolder">
+		SELECT 
+			<include refid="sysFolderColumns"/>
+		FROM sys_folder a
+		<include refid="sysFolderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="find" resultType="SysFolder">
+		SELECT
+		<include refid="sysFolderColumns"/>
+		FROM sys_folder a
+		<include refid="sysFolderJoins"/>
+		<where>
+		a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="parentIds!=null">
+			and a.parent_ids=#{parentIds}
+		</if>
+		</where>
+
+	</select>
+	<select id="findList" resultType="SysFolder">
+		SELECT 
+			<include refid="sysFolderColumns"/>
+		FROM sys_folder a
+		<include refid="sysFolderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+				AND a.parent_id=#{id}
+		</where>
+
+	</select>
+	<select id="findByParentIdsLike" resultType="SysFolder">
+		SELECT
+		a.id,
+		a.parent_id AS "parent.id",
+		a.parent_ids
+		FROM sys_folder a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds}
+
+	</select>
+	<select id="findAllList" resultType="SysFolder">
+		SELECT 
+			<include refid="sysFolderColumns"/>
+		FROM sys_folder a
+		<include refid="sysFolderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+	</select>
+	<select id="findByName" resultType="SysFolder">
+		SELECT
+		<include refid="sysFolderColumns"/>
+		FROM sys_folder a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND  a.folder_name = #{name}
+			And a.parent_id=#{parent.id}
+		</where>
+	</select>
+	<insert id="insert">
+		INSERT INTO sys_folder(
+			id,
+			folder_name,
+			parent_ids,
+			parent_id,
+			click_num,
+			download_num,
+			create_by,
+			create_date,
+			create_name,
+			update_by,
+			update_date,
+			update_name,
+			type,
+			del_flag,
+			file_size,
+			remarks
+		) VALUES (
+			#{id},
+			#{name},
+			#{parentIds},
+			#{parent.id},
+			#{clickNum},
+			#{downloadNum},
+			#{createBy.id},
+			#{createDate},
+			#{createBy.name},
+			#{updateBy.id},
+			#{updateDate},
+			#{updateBy.name},
+			#{type},
+			#{delFlag},
+			#{fileSize},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_folder SET 	
+			folder_name = #{name},
+			parent_ids = #{parentIds},
+			parent_id = #{parent.id},
+			create_name = #{createBy.name},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			update_name = #{updateBy.name},
+			file_size=#{fileSize},
+			click_num=#{clickNum},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateParentIds">
+		UPDATE sys_folder SET
+		parent_id = #{parent.id},
+		parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	<update id="delete">
+		UPDATE sys_folder SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

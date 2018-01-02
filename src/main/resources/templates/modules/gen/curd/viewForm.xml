@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>viewForm</name>
+	<filePath>src/main/webapp/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+	<fileName>${className}Form.jsp</fileName>
+	<content><![CDATA[
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<script type="text/javascript">
+		$(document).ready(function() {
+
+		});
+        //提交数据
+        function subForm(){
+            $("#inputForm").form('submit',{
+                url : '${r"${ctx}"}/${urlPrefix}/save',
+                onSubmit : function() {
+                    var validate = $("#inputForm").form("validate");
+                    if (!validate) {
+                        $.messager.show({
+                            title:'提示信息',
+                            msg:'输入有误，请完善输入信息',
+                            timeout:5000,
+                            showType:'slide'
+                        });
+                        return false;
+                    }
+                    return validate;
+                },
+                success : function(result) {
+                    result=JSON.parse(result);
+                    $.messager.show({
+                        title : '提示信息',
+                        msg : result.msg,
+                        timeout : 1000 * 2
+                    });
+                    if(200==result.code){
+                        $.modalDialog.openner.datagrid('reload');//之所以能在这里调用到parent.$.modalDialog.openner_datagrid这个对象，是因为页面预定义好了
+                        $.modalDialog.handler.dialog('close');
+                    }
+                }
+            });
+        };
+        //关闭当前窗口
+        function closeForm(){
+            $.modalDialog.handler.dialog('close');
+        }
+
+	</script>
+
+
+	<form id="inputForm" modelAttribute="${className}" action="${r"${ctx}"}/${urlPrefix}/save" method="post" class="form-horizontal">
+		<form:hidden path="id"/>
+		<input type="hidden" name="${className}.id"/>
+
+        <div style="margin-bottom: 20px">
+            <input id="name" data-options="required:true,label:'ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'" name="type" type="text"
+                   " htmlEscape="false" class="easyui-textbox easyui-validatebox"
+                   style="width:80%">
+        </div>
+        <div style="margin-bottom:20px;text-align: center">
+                <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="subForm()">保 存</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-undo'" onclick="closeForm()">返回</a>
+        </div>
+	</form>
+]]>
+	</content>
+</template>

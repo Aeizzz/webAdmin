@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.act.dao.ActDao">
+    
+	<update id="updateProcInstIdByBusinessId">
+		UPDATE ${businessTable} SET 
+			proc_inst_id = #{procInstId}
+		WHERE BASE_INFO_ID = #{businessId}
+	</update>
+
+</mapper>
