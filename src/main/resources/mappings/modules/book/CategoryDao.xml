@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.book.dao.LHLCategoryDao">
+
+    <sql id="lhlcategoryColumns">
+        a.id,
+        a.name
+    </sql>
+    <select id="get" resultType="LHLCategory">
+        SELECT
+        <include refid="lhlcategoryColumns"/>
+        FROM lhl_category a
+        WHERE a.id = #{id}
+    </select>
+    <select id="findList" resultType="LHLCategory">
+        SELECT
+        <include refid="lhlcategoryColumns" />
+        FROM lhl_category a
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+
+    <insert id="insert">
+        INSERT into lhl_category(
+        id,
+        name,
+        del_flag
+        )VALUES (
+        #{id},
+        #{name},
+        #{delFlag}
+        )
+    </insert>
+    <update id="delete">
+        UPDATE lhl_category SET
+        del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

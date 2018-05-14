@@ -63,8 +63,8 @@
 		WHERE id = #{id}
     </update>
     <update id="delete">
-        UPDATE book SET
-        del_flag = #{DEL_FLAG_DELETE}
-        WHERE id = #{id}
+    UPDATE book SET
+    del_flag = #{DEL_FLAG_DELETE}
+    WHERE id = #{id}
     </update>
 </mapper>

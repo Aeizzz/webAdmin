@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tepusoft.modules.book.dao.LHLPublishingDao">
+
+    <sql id="lhlpublishingColumns">
+        a.id,
+        a.name
+    </sql>
+    <select id="get" resultType="LHLPublishing">
+        SELECT
+        <include refid="lhlpublishingColumns"/>
+        FROM lhl_publishing a
+        WHERE a.id = #{id}
+    </select>
+    <select id="findList" resultType="LHLPublishing">
+        SELECT
+        <include refid="lhlpublishingColumns" />
+        FROM lhl_publishing a
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+    <insert id="insert">
+        INSERT into lhl_publishing(
+        id,
+        name,
+        del_flag
+        )VALUES (
+        #{id},
+        #{name},
+        #{delFlag}
+        )
+    </insert>
+    <update id="delete">
+        UPDATE lhl_publishing SET
+        del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

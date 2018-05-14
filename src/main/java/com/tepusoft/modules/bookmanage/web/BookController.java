@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "${adminPath}/book")
-public class BookController extends BaseController{
+public class BookController extends BaseController {
 
     @Autowired
     private BookService bookService;

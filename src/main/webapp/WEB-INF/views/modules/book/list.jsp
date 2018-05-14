@@ -7,7 +7,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#dataList").datagrid({
-                url:'${ctx}/book/dataList',
+                url:'${ctx}/lhl/book/datalist',
                 rownumbers:true,
                 fitColumns:true,
                 singleSelect:true,
@@ -23,6 +23,8 @@
                     {field:'isbn',title:"ISBN号",width:20},
                     {field:'name',title:'书名',width:40},
                     {field:'author',title:'作者',width:40},
+                    {field:'category',title:'分类',width:40},
+                    {field:'publishing',title:'出版社',width:40},
                     {field:'操作',title:'操作',width:100,formatter: function(value,row,index){
                         var btn="";
                         btn += "<a class='button-edit  button-info'  href='javascript:void(0)' onclick='edit(\"" + row.id + "\")'>编辑</a>&nbsp;&nbsp;&nbsp;";
@@ -45,7 +47,7 @@
             $.messager.confirm('确认','您确认想要删除该信息吗？',
                 function(r) {
                     if (r) {
-                        var url = '${ctx}/book/delete?id='+id;
+                        var url = '${ctx}/lhl/book/delete?id='+id;
                         $.post(url, function(data) {
                             if(200==data.code){
                                 $.messager.show({
@@ -73,7 +75,7 @@
                 title : "编辑",
                 width : 500,
                 height : 500,
-                href : "${ctx}/book/form?id="+id
+                href : "${ctx}/lhl/book/form?id="+id
             });
         }
 
@@ -83,17 +85,17 @@
                 title : "新增",
                 width : 500,
                 height : 500,
-                href : "${ctx}/book/form"
+                href : "${ctx}/lhl/book/form"
             });
         }
         function exportData() {
-            window.location.href = '${ctx}/book/export';
+            window.location.href = '${ctx}/lhl/book/export';
         }
     </script>
 </head>
 <body>
 <div id="toolbar">
-    14021640011徐韵轩
+    15021140002 刘洪磊
     <a href="#" class="easyui-linkbutton"  onclick="addData();"  iconCls="icon-add" plain="true">新增</a>
     <a href="#" class="easyui-linkbutton"  onclick="exportData();"  iconCls="icon-print" plain="true">导出</a>
 </div>
